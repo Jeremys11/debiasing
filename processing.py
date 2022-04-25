@@ -35,7 +35,7 @@ def timeslice(data_X, data_Y=[], input_width=24, shuffle=False):
 
 def processing(selected_location):
 
-    airnow_data, forecast_data = pickle.load(open("data/data_o3.p", "rb"))
+    airnow_data, forecast_data = pickle.load(open("data/my_data_o3.p", "rb"))
     airnow_data.index.name = "date_time"
 
     # Sort both data sources into a single array so they can be normalized together
@@ -70,8 +70,6 @@ def processing(selected_location):
 
     
     data_scaled = np.c_[o3_scaled,temp_scaled,hours,windspeed_scaled,pbl_scaled]
-    #data_scaled = np.c_[o3_scaled]
-
 
     # Zero out the mean since we'll be using the scalar to de-scale error values later
     oldmean = scaler.mean_
@@ -91,11 +89,6 @@ def processing(selected_location):
         features = base_X.shape[2]
     base_X = base_X.reshape((base_X.shape[0], base_X.shape[1], features))
 
-
-    ##
-    ##  CHANGE THE *NUM TO CHANGE SIZE OF EVALUATION GRAPH
-    ##
-
     # Separate data into different sets
     test_X = base_X[int(len(base_X)*0.8)+4:]
     base_X = base_X[:int(len(base_X)*0.8)+4]
@@ -106,18 +99,8 @@ def processing(selected_location):
 
     X = base_X[:int(len(base_X)*0.8)]
     val_X = base_X[int(len(base_X)*0.8):]
-    #test_X = base_X[int(len(base_X)*0.9):]
 
     Y = base_Y[:int(len(base_X)*0.8)]
     val_Y = base_Y[int(len(base_Y)*0.8):]
-    #test_Y = base_Y[int(len(base_Y)*0.9):]
 
-    scaler.mean_ = oldmean
-
-    airnow_obs = scaler.inverse_transform([test_Y]).flatten()
-    forecast_obs = np.array(forecast_data["O3"][selected_location,:])[-len(airnow_obs):]
-
-    return(X,Y,val_X,val_Y,test_X,test_Y,scaler,oldmean,forecast_obs,airnow_obs)
-
-
-processing(250010002)
+    return(X,Y,val_X,val_Y,test_X,test_Y,scaler,oldmean)

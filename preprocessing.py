@@ -1,5 +1,6 @@
 import pickle
 import pandas as pd
+import numpy as np
 
 #13 - 23 inc missing on 2019-12-31
 #maybe add 0 rows and then interpolate
@@ -24,7 +25,7 @@ def preprocessing():
                 airnow_data[item][date] = None
 
         #Interpolating missing data
-        airnow_data[item] = airnow_data[item].interpolate(method="time")
+        airnow_data[item].interpolate(method="time",inplace=True,limit_direction="both")
 
     ##  Modifying Forecast Data
     ##

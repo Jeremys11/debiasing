@@ -47,7 +47,7 @@ def processing(selected_location):
     data["pbl"] = forecast_data["PBL2"][selected_location,:]
 
     #Drop rows with NAN values
-    data.dropna(inplace=True)
+    #data.dropna(inplace=True)
     copy_data = copy.deepcopy(data)
     copy_data.index.name = "date_time"
 
@@ -83,8 +83,8 @@ def processing(selected_location):
     # Generate timesteps
     base_X, base_Y = timeslice(forecast, airnow)
 
-    # Format training data for the LSTM
-    features = 1
+    # Format training data for the Resnet
+    features = 5
     if(len(base_X.shape)>2):
         features = base_X.shape[2]
     base_X = base_X.reshape((base_X.shape[0], base_X.shape[1], features))

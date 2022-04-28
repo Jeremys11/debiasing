@@ -1,7 +1,8 @@
 notes.txt
 Output/*
 data/*
-__pychache__
-__pychache__/*
-data
-Output
+__pycache__/
+*.py[cod]
+*$py.class
+data/
+Output/

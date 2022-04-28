@@ -1,9 +1,3 @@
-
-data/data_o3.p
-data/data_pm25.p
-data/my_data_o3.p
-Output/Eval.png
 notes.txt
-Output/output.csv
 Output/*
 data/*

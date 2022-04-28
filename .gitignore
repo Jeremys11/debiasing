@@ -1,3 +1,7 @@
 notes.txt
 Output/*
 data/*
+__pychache__
+__pychache__/*
+data
+Output

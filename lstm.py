@@ -14,7 +14,6 @@ def lstm_main(my_location):
     model.compile(loss='mae', optimizer='adam')
 
     model.summary()
-
     history = model.fit(X, Y, epochs=100, batch_size=32, validation_data=(val_X, val_Y), verbose=2, shuffle=False)
     
     scaler.mean_ = oldmean

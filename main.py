@@ -54,9 +54,11 @@ def main():
         r_forecast, p_value2 = stats.pearsonr(graph_forecast,graph_airnow)
         r_lstm, p_value3 = stats.pearsonr(graph_LSTM,graph_airnow)
         print("airnow - Resnet Correlation: ", r_prediction)
+        print("airnow - LSTM Correlation: ", r_lstm)
         print("airnow - Forecast Correlation: ", r_forecast)
 
         print("airnow - Resnet RMSE: ", airnow_vs_prediction)
+        print("airnow - LSTM RMSE: ", airnow_vs_lstm)
         print("airnow - forecast RMSE: ", airnow_vs_forecast)
 
         model_info = [

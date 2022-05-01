@@ -47,7 +47,7 @@ def resnet_main(my_location):
 	predictions = Dense(1)(outputs)
 
 	model = Model(inputs=inputs, outputs=predictions)
-	model.compile(optimizer='adam', loss='mse')
+	model.compile(optimizer='adam', loss='mae')
 
 	model.summary()
 	history = model.fit(X, Y, epochs=100, batch_size=32, validation_data=(val_X, val_Y), verbose=2, shuffle=False)
@@ -56,9 +56,7 @@ def resnet_main(my_location):
 
 	#Generates output predictions for the input samples.
 	eval_model = scaler.inverse_transform([model.predict(test_X).flatten()]).flatten()
-	eval_obs = scaler.inverse_transform([test_Y]).flatten()
-	eval_obs_clean = list(map(lambda x: None if(x==0) else x,eval_obs))
 
 	clear_session()
 
-	return(eval_obs_clean)
+	return(eval_model)

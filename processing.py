@@ -5,7 +5,8 @@ import pickle
 import copy
 
 def shuffle(inputs, labels):
-    perm = np.random.default_rng().permutation(inputs.shape[0])
+    rng = np.random.default_rng()
+    perm = rng.permutation(inputs.shape[0])
     return inputs[perm], labels[perm]
 
 def timeslice(data_X, data_Y=[], input_width=24, shuffle=False):
@@ -67,8 +68,6 @@ def processing(selected_location):
     windspeed_scaled = StandardScaler().fit_transform(data[:,3].reshape((-1,1))).reshape(original_shape["windspeed"])
     pbl_scaled = StandardScaler().fit_transform(data[:,4].reshape((-1,1))).reshape(original_shape["pbl"])
     hours = [time.hour for time in list(pd.to_datetime(copy_data.index))]
-
-    
     data_scaled = np.c_[o3_scaled,temp_scaled,hours,windspeed_scaled,pbl_scaled]
 
     # Zero out the mean since we'll be using the scalar to de-scale error values later
@@ -79,21 +78,19 @@ def processing(selected_location):
     airnow = data_scaled[:,0]
     forecast = data_scaled[:,1:]
 
-
     # Generate timesteps
     base_X, base_Y = timeslice(forecast, airnow)
 
     # Format training data for the Resnet
-    features = 5
-    if(len(base_X.shape)>2):
-        features = base_X.shape[2]
+    features = base_X.shape[2]
     base_X = base_X.reshape((base_X.shape[0], base_X.shape[1], features))
 
     # Separate data into different sets
-    test_X = base_X[int(len(base_X)*0.8)+4:]
-    base_X = base_X[:int(len(base_X)*0.8)+4]
-    test_Y = base_Y[int(len(base_Y)*0.8)+4:]
-    base_Y = base_Y[:int(len(base_Y)*0.8)+4]
+    #For some reason, changing the *0.8 here changes the output in a constant way for any model
+    test_X = base_X[int(len(base_X)*0.8):]
+    base_X = base_X[:int(len(base_X)*0.8)]
+    test_Y = base_Y[int(len(base_Y)*0.8):]
+    base_Y = base_Y[:int(len(base_Y)*0.8)]
 
     base_X, base_Y = shuffle(base_X, base_Y)
 

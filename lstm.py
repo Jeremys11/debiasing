@@ -11,7 +11,7 @@ def lstm_main(my_location):
     model= Sequential()
     model.add(LSTM(10, input_shape=(X.shape[1], X.shape[2]), dropout=0.0, stateful=False, return_sequences=False))
     model.add(Dense(1))
-    model.compile(loss='mae', optimizer='adam')
+    model.compile(loss='mse', optimizer='adam')
 
     model.summary()
     history = model.fit(X, Y, epochs=100, batch_size=32, validation_data=(val_X, val_Y), verbose=2, shuffle=False)

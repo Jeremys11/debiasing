@@ -2,6 +2,10 @@ from keras.models import Model
 from keras.layers import Input, Dense, Activation, Conv1D, BatchNormalization, Add
 from processing import processing
 from keras.backend import clear_session
+from sklearn.metrics import mean_squared_error
+#from scipy.stats import pearsonr
+from correlation import correlation_coefficient_loss
+#import tensorflow_probability as tfp
 
 
 #Change kernel and filter size
@@ -35,7 +39,6 @@ def resnet_main(my_location):
 
 	X,Y,val_X,val_Y,test_X,test_Y,scaler,oldmean = processing(my_location)
 
-
 	input_shape = (X.shape[1],X.shape[2])
 
 	inputs = Input(shape=input_shape)
@@ -47,7 +50,7 @@ def resnet_main(my_location):
 	predictions = Dense(1)(outputs)
 
 	model = Model(inputs=inputs, outputs=predictions)
-	model.compile(optimizer='adam', loss='mae')
+	model.compile(optimizer='adam', loss=correlation_coefficient_loss)
 
 	model.summary()
 	history = model.fit(X, Y, epochs=100, batch_size=32, validation_data=(val_X, val_Y), verbose=2, shuffle=False)

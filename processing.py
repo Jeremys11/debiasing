@@ -67,6 +67,10 @@ def processing(selected_location):
     temp_scaled = StandardScaler().fit_transform(data[:,2].reshape((-1,1))).reshape(original_shape["temp"])
     windspeed_scaled = StandardScaler().fit_transform(data[:,3].reshape((-1,1))).reshape(original_shape["windspeed"])
     pbl_scaled = StandardScaler().fit_transform(data[:,4].reshape((-1,1))).reshape(original_shape["pbl"])
+    #o3_scaled = data[:,:2]
+    #temp_scaled = data[:,2]
+    #windspeed_scaled = data[:,3]
+    #pbl_scaled = data[:,4]
     hours = [time.hour for time in list(pd.to_datetime(copy_data.index))]
     data_scaled = np.c_[o3_scaled,temp_scaled,hours,windspeed_scaled,pbl_scaled]
 

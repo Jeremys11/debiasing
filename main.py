@@ -23,18 +23,14 @@ def main():
     for my_location in testing_locations:
 
         prediction_array = resnet_main(my_location)
-        prediction_LSTM = lstm_main(my_location)
         
         temp_forecast = forecast_data["O3"][my_location,:].reset_index(drop=True)
 
         graph_airnow = airnow_data[my_location][start_day:end_day]
         graph_forecast = temp_forecast[start_day:end_day]
         graph_prediction = prediction_array[start_day:end_day]
-        graph_LSTM = prediction_LSTM[start_day:end_day]
-
 
         pyplot.plot(graph_airnow, label='Airnow', color="black", linewidth=0.75)
-        pyplot.plot(graph_LSTM, label='LSTM', color="green", linewidth=0.75)
         pyplot.plot(graph_prediction, label='Resnet', color="orange", linewidth=0.75)
         pyplot.plot(graph_forecast, label='Forecast', color="blue", linewidth=0.75)
         pyplot.xlabel("Forecast Hour")
@@ -48,26 +44,19 @@ def main():
 
         airnow_vs_prediction = mean_squared_error(graph_airnow,graph_prediction,squared=False)
         airnow_vs_forecast = mean_squared_error(graph_airnow,graph_forecast,squared=False)
-        airnow_vs_lstm = mean_squared_error(graph_airnow,graph_LSTM,squared=False)
 
         r_prediction, p_value1 = stats.pearsonr(graph_prediction,graph_airnow)
         r_forecast, p_value2 = stats.pearsonr(graph_forecast,graph_airnow)
-        r_lstm, p_value3 = stats.pearsonr(graph_LSTM,graph_airnow)
         print("airnow - Resnet Correlation: ", r_prediction)
-        print("airnow - LSTM Correlation: ", r_lstm)
         print("airnow - Forecast Correlation: ", r_forecast)
-
         print("airnow - Resnet RMSE: ", airnow_vs_prediction)
-        print("airnow - LSTM RMSE: ", airnow_vs_lstm)
         print("airnow - forecast RMSE: ", airnow_vs_forecast)
 
         model_info = [
             my_location,
             airnow_vs_prediction,
-            airnow_vs_lstm,
             airnow_vs_forecast,
             r_prediction,
-            r_lstm,
             r_forecast
         ]
 

@@ -1,6 +1,7 @@
 import tensorflow as tf
-from keras import backend as K
 import numpy as np
+import time
+
 
 #Souce for pearson correlation code
 #https://stackoverflow.com/questions/46619869/how-to-specify-the-correlation-coefficient-as-the-loss-function-in-keras
@@ -8,22 +9,23 @@ import numpy as np
 
 #r = sum(xi - xbar)(yi - ybar) / sqrt [sum(xi - xbar)**2 * sum(yi - ybar)**2]
 #xm = xi - xbar 
+#r = r_num / r_den
 def correlation_coefficient_loss(y_true, y_pred):
     x = y_true
     y = y_pred
-    mx = K.mean(x)
-    my = K.mean(y)
+    #tf.print(x)
+    #tf.print(y)
+    mx = tf.reduce_mean(x)
+    my = tf.reduce_mean(y)
     xm, ym = x-mx, y-my
-    r_num = K.sum(tf.multiply(xm,ym))
-    r_den = K.sqrt(tf.multiply(K.sum(K.square(xm)), K.sum(K.square(ym))))
+    r_num = tf.math.reduce_sum(tf.multiply(xm,ym))
+    xm_square = tf.square(xm)
+    ym_square = tf.square(ym)
+    xm_sum = tf.math.reduce_sum(xm_square)
+    ym_sum = tf.math.reduce_sum(ym_square)
+    mulXY = tf.multiply(xm_sum,ym_sum)
+    r_den = tf.sqrt(mulXY)
     r = r_num / r_den
 
-    r = K.maximum(K.minimum(r, 1.0), -1.0)
-    return 1 - K.square(r)
-
-x = [1,2,3,4,5]
-y = [2,3,4,5,6]
-x = K.constant(x)
-y = K.constant(y)
-
-print(correlation_coefficient_loss(x,y))
+    r = tf.maximum(tf.minimum(r, 1.0), -1.0)
+    return 1 - tf.square(r)

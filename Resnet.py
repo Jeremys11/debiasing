@@ -26,6 +26,7 @@ from correlation import correlation_coefficient_loss
 def resnet_model(input_layer,input_shape):
 	x1 = Conv1D(filters=5, kernel_size=3, padding="same", input_shape=input_shape)(input_layer)
 	x2 = Conv1D(filters=5,kernel_size=1,padding="same",input_shape=input_shape)(input_layer)
+	x2 = BatchNormalization()(x2)
 	x = BatchNormalization()(x1)
 	x = Activation("relu")(x)
 	x = Conv1D(filters=5, kernel_size=3, padding="same", input_shape=input_shape)(x)

@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import pickle
 import copy
+import bz2
 
 def shuffle(inputs, labels):
     rng = np.random.default_rng()
@@ -36,7 +37,9 @@ def timeslice(data_X, data_Y=[], input_width=24, shuffle=False):
 
 def processing(selected_location):
 
-    airnow_data, forecast_data = pickle.load(open("data/my_data_o3.p", "rb"))
+    data = bz2.BZ2File('bz2_test.pbz2', 'rb')
+    airnow_data, forecast_data = pickle.load(data)
+    #airnow_data, forecast_data = pickle.load(open("data/my_data_o3.p", "rb"))
     airnow_data.index.name = "date_time"
 
     # Sort both data sources into a single array so they can be normalized together

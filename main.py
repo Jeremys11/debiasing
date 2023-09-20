@@ -6,10 +6,12 @@ import pickle
 from scipy import stats
 from sklearn.metrics import mean_squared_error
 import csv
+import bz2
 
 def main():
 
-    airnow_data, forecast_data = pickle.load(open("data/my_data.p", "rb"))
+    data = bz2.BZ2File('bz2_test.pbz2', 'rb')
+    airnow_data, forecast_data = pickle.load(data)
 
     start_day = 24*0
     end_day = 24*2
